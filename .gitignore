@@ -3,3 +3,6 @@
 /dist/
 /target/
 /Cargo.lock
+
+# owned
+tailwind.css
