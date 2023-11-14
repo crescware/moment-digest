@@ -14,10 +14,12 @@ tauri-build = { version = "1.5.0", features = [] }
 
 [dependencies]
 futures = "0.3.29"
+mockall = "0.11.4"
 regex = "1.10.2"
 serde = { version = "1.0.192", features = ["derive"] }
 serde_json = "1.0.108"
 tauri = { version = "1.5.2", features = [ "dialog-open", "shell-open"] }
+thiserror = "1.0.50"
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem

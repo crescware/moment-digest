@@ -1,9 +1,10 @@
 mod pick_folder_impl;
 
-use std::fs;
-use std::path::{Path, PathBuf};
-use std::io;
 use regex::Regex;
+use std::fs;
+use std::io;
+use std::path::{Path, PathBuf};
+use tauri::api::dialog::FileDialogBuilder;
 
 fn list_files_in_directory<P: AsRef<Path>>(dir: P) -> io::Result<Vec<PathBuf>> {
     let mut files = Vec::new();
@@ -20,9 +21,23 @@ fn list_files_in_directory<P: AsRef<Path>>(dir: P) -> io::Result<Vec<PathBuf>> {
     Ok(files)
 }
 
+struct FileDialogBuilderProxy(FileDialogBuilder);
+
+impl pick_folder_impl::FileDialogBuilderTrait for FileDialogBuilderProxy {
+    fn pick_folder(self, f: Box<dyn FnOnce(Option<PathBuf>) + Send + 'static>) {
+        self.0.pick_folder(f)
+    }
+}
+
 #[tauri::command]
 pub async fn pick_folder() {
-    let path = pick_folder_impl::pick_folder_impl().await.unwrap();
+    FileDialogBuilder::new().pick_folder(Box::new(|path| {
+        println!("Selected path: {:?}", path);
+    }));
+
+
+    let builder = FileDialogBuilderProxy(FileDialogBuilder::new());
+    let path = pick_folder_impl::pick_folder_impl(builder).await.unwrap();
     println!("Selected path: {:?}", path);
 
     println!("list_files_in_director");
