@@ -1,10 +1,7 @@
+use super::file_dialog_builder_trait::FileDialogBuilderTrait;
 use futures::channel::oneshot;
 use std::path::PathBuf;
 use thiserror::Error;
-
-pub trait FileDialogBuilderTrait {
-    fn pick_folder(self, f: Box<dyn FnOnce(Option<PathBuf>) + Send + 'static>);
-}
 
 #[derive(Error, Debug)]
 pub enum PickFolderImplError {
